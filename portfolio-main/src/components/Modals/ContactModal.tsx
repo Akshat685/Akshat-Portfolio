@@ -19,7 +19,7 @@ export default function ContactModal({ isOpen , setIsOpen }: { isOpen: boolean ,
                         <Image src="/images/gmail.svg" alt="Gmail" width={36} height={36} />
                     </a> */}
                     <a href="https://www.linkedin.com/in/akshat-shettigar-088214253/"  rel="noopener noreferrer" target="_blank">
-                        <Image src="/images/linkedinIconDisp.svg" alt="LinkedIn" width={36} height={36} />
+                        <Image src="/images/linkedin.svg" alt="LinkedIn" width={36} height={36} />
                     </a>
                 </div>
 
