@@ -11,7 +11,7 @@ export default function ContactModal({ isOpen , setIsOpen }: { isOpen: boolean ,
                     <button onClick={() => setIsOpen(false)} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
                 
-                <div className="flex gap-4 justify-center mt-2">
+                <div className="flex gap-10 justify-center mt-2">
                     <a href="https://github.com/Akshat685" rel="noopener noreferrer" target="_blank">
                         <Image src="/images/github.svg" alt="GitHub" width={36} height={36} />
                     </a>

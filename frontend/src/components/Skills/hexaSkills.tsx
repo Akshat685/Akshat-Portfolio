@@ -13,38 +13,46 @@ interface PolygonProps {
 
 
 export default function HexaSkills() {
-  
+
   return (
-    <div className="  h-fit w-fit ml-[40px]">
+    <div className="  h-fit w-fit mt-10 ml-[40px]">
 
       <div className={polygonContainerClass}>
 
-        <Polygon imageUrl="/images/skills/mongodb.svg" />
-        <Polygon imageUrl="/images/skills/react.svg"  />
-        <Polygon imageUrl="/images/skills/node-js.svg"  />
-      </div>
-      <div className={polygonContainerClass}>
-        <Polygon imageUrl="/images/skills/html.svg"  />
+        <Polygon imageUrl="/images/skills/html.svg" />
         <Polygon imageUrl="/images/skills/css.svg" />
+        <Polygon imageUrl="/images/skills/javascript.svg" />
+        <Polygon imageUrl="/images/skills/mongodb.svg" />
+      </div>
+
+      <div className={polygonContainerClass}>
+        <Polygon imageUrl="/images/skills/react.svg" />
+        <Polygon imageUrl="/images/skills/nodejsStackedLight.svg" />
+        <Polygon imageUrl="/images/skills/next.svg" />
 
       </div>
 
       <div className={polygonContainerClass}>
-        <Polygon imageUrl="/images/skills/javascript.svg"  />
-        <Polygon imageUrl="/images/skills/mysql2.svg"  />
-        <Polygon imageUrl="/images/skills/github.svg"  />
-
-
+        <Polygon imageUrl="/images/skills/tailwindcss.svg" />
+        <Polygon
+          imageUrl="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg"
+          url="https://graphql.org/"
+        />
+        <Polygon
+          imageUrl="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg"
+          url="https://www.postgresql.org/"
+        />
+        <Polygon imageUrl="/images/skills/bootstrap.svg" />
       </div>
+
       <div className={polygonContainerClass}>
-        {/* <Polygon imageUrl="/images/skills/express.png" url="https://react.dev/" /> */}
-        <Polygon imageUrl="/images/skills/python.svg" />
-        <Polygon imageUrl="/images/skills/bootstrap.svg"  />
+
+
+        <Polygon imageUrl="/images/skills/github.svg" />
+        <Polygon imageUrl="/images/skills/typescriptLogoDisp.svg" />
       </div>
 
       <div className={polygonContainerClass}>
-        {/* <Polygon imageUrl="/images/skills/typescriptLogoDisp.svg"  /> */}
-
       </div>
     </div>
   );
