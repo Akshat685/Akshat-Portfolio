@@ -9,10 +9,12 @@ const expText1 = ["MERN Stack Developer Intern."];
 
 export default function Hero() {
   const [currentText, setCurrentText] = useState("");
+  const [isHydrated, setIsHydrated] = useState(false);
   const isCursorAnimation = useRef(false);
   const [count, setCount] = useState(0); // Counter for cycling through texts
 
   useEffect(() => {
+    setIsHydrated(true);
     if (!isCursorAnimation.current) {
       initiateCursorAnimation();
       isCursorAnimation.current = true;
@@ -55,6 +57,38 @@ export default function Hero() {
     const element = document.getElementById(id) as HTMLElement;
     element.classList.remove(className);
   };
+
+  if (!isHydrated) {
+    return (
+      <div className="flex  h-screen  w-full relative z-10 overflow-hidden bg-black ">
+        <video
+          src="/video/bgVideoMain.webm"
+          poster="/images/poster.webp"
+          autoPlay
+          muted
+          playsInline
+          loop
+          className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
+          preload="auto"
+        />
+        <div className=" mx-auto md:max-w-[80%] max-w-[90%]  w-full ">
+          <div className="text-white absolute top-[30%] md:top-[30%] ">
+            <div
+              className="flex gap-2 max-w-fit justify-left h-fit max-h-[40px]"
+              id="title"
+            >
+              <h1 className="md:text-4xl w-fit text-2xl">Hi, I'm <b className="text-orange-500">Akshat Shettigar</b></h1>
+            </div>
+            <div className="max-w-fit md:mt-4 mt-2 md:text-6xl text-3xl min-h-[60px] md:min-h-[80px]">
+              <h1 id="proffession" className="font-extrabold ">
+                {""}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex  h-screen  w-full relative z-10 overflow-hidden bg-black ">

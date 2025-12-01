@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface MobileContextType {
@@ -12,6 +14,7 @@ const MobileContext = createContext<MobileContextType>({
 
 export function MobileProvider({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -19,6 +22,7 @@ export function MobileProvider({ children }: { children: React.ReactNode }) {
     };
     
     checkMobile();
+    setIsHydrated(true);
     window.addEventListener('resize', checkMobile);
     
     return () => window.removeEventListener('resize', checkMobile);
@@ -26,7 +30,7 @@ export function MobileProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MobileContext.Provider value={{ isMobile, setIsMobile }}>
-      {children}
+      {isHydrated ? children : <>{children}</> }
     </MobileContext.Provider>
   );
 }

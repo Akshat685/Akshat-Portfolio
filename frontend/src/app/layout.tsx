@@ -24,7 +24,7 @@ export default function RootLayout({
 
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${manrope.variable} antialiased bg-black `}>
         <main className="w-full">
           {children}

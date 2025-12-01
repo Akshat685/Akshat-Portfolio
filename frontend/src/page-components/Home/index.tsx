@@ -61,9 +61,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-        {
-            !isModelLoaded && <LoadingWrap />
-        }
+      {isModelLoaded === false && <LoadingWrap />}
       <Scene />
       <div className="w-full h-full">
         <Nav />

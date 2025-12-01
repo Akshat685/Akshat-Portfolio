@@ -54,7 +54,7 @@ export default function Nav() {
                        
                     </div>
                     <div className={commonClasses} onMouseOver={onmouseoverEvent} onMouseOut={onmouseoutEvent}>
-                        <a href="https://drive.google.com/file/d/1s4nKYgYz5ZvUBorhcya_WePzfv29ckyx/view?usp=sharing" target="_blank">
+                        <a href="https://drive.google.com/file/d/15KMFHW0l2ZQwXaxAq4hWLehS2ojCYDZR/view?usp=sharing" target="_blank">
                             <h1>Resume</h1>
                         </a>
                     </div>
