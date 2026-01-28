@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,6 +10,7 @@ import { EffectCube } from "swiper/modules";
 import Nav from "@/components/Nav";
 import { useAppContext } from "@/context/AppContext";
 import Skills from "@/components/Skills";
+import { useMobile } from "@/context/MobileContext";
 import LoadingWrap from "@/components/LoadingWrap";
 
 const Hero = dynamic(() => import("@/components/Hero"), {
@@ -24,6 +25,8 @@ const Scene = dynamic(() => import("@/components/3DModels/HeroModel/Scene"), {
 
 export default function Home() {
   const { setActiveIndex, setSwiper , isModelLoaded} = useAppContext();
+  const { isMobile } = useMobile();
+  const [showScene, setShowScene] = useState(false);
 
   const commonPageClassesWithAutoMargin =
     "swiper-slide w-full h-screen mx-auto md:max-w-[80%] max-w-[90%]";
@@ -54,6 +57,18 @@ export default function Home() {
     setSwiper(swiperInstance);
   }, []);
 
+  // Defer loading the 3D scene and skip it entirely on mobile to improve performance.
+  useEffect(() => {
+    if (isMobile) {
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      setShowScene(true);
+    }, 600); // small delay to avoid blocking initial paint
+
+    return () => window.clearTimeout(timeout);
+  }, [isMobile]);
+
   useEffect(() => {
     console.log({isModelLoaded})
   }, [isModelLoaded]);
@@ -61,8 +76,8 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      {isModelLoaded === false && <LoadingWrap />}
-      <Scene />
+      {!isMobile && isModelLoaded === false && <LoadingWrap />}
+      {!isMobile && showScene && <Scene />}
       <div className="w-full h-full">
         <Nav />
 

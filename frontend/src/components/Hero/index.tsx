@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import HeadingTextContainer from "@/atoms/HeadingTextContainer";
 import { splitTextAnimation } from "@/Utills/commonUtills";
 import { useAppContext } from "@/context/AppContext";
 import { color } from "three/tsl";
+import { useMobile } from "@/context/MobileContext";
 
 const expText1 = ["MERN Stack Developer Intern."];
 
@@ -12,6 +14,7 @@ export default function Hero() {
   const [isHydrated, setIsHydrated] = useState(false);
   const isCursorAnimation = useRef(false);
   const [count, setCount] = useState(0); // Counter for cycling through texts
+  const { isMobile } = useMobile();
 
   useEffect(() => {
     setIsHydrated(true);
@@ -61,16 +64,28 @@ export default function Hero() {
   if (!isHydrated) {
     return (
       <div className="flex  h-screen  w-full relative z-10 overflow-hidden bg-black ">
-        <video
-          src="/video/bgVideoMain.webm"
-          poster="/images/poster.webp"
-          autoPlay
-          muted
-          playsInline
-          loop
-          className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
-          preload="auto"
-        />
+        {!isMobile && (
+          <video
+            src="/video/bgVideoMain.webm"
+            poster="/images/poster.webp"
+            autoPlay
+            muted
+            playsInline
+            loop
+            className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
+            preload="metadata"
+          />
+        )}
+        {isMobile && (
+          <Image
+            src="/images/poster.webp"
+            alt="Background"
+            fill
+            priority
+            sizes="100vw"
+            className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
+          />
+        )}
         <div className=" mx-auto md:max-w-[80%] max-w-[90%]  w-full ">
           <div className="text-white absolute top-[30%] md:top-[30%] ">
             <div
@@ -92,16 +107,28 @@ export default function Hero() {
 
   return (
     <div className="flex  h-screen  w-full relative z-10 overflow-hidden bg-black ">
-      <video
-        src="/video/bgVideoMain.webm"
-        poster="/images/poster.webp"
-        autoPlay
-        muted
-        playsInline
-        loop
-        className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
-        preload="auto"
-      />
+      {!isMobile && (
+        <video
+          src="/video/bgVideoMain.webm"
+          poster="/images/poster.webp"
+          autoPlay
+          muted
+          playsInline
+          loop
+          className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
+          preload="metadata"
+        />
+      )}
+      {isMobile && (
+        <Image
+          src="/images/poster.webp"
+          alt="Background"
+          fill
+          priority
+          sizes="100vw"
+          className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
+        />
+      )}
       <div className=" mx-auto md:max-w-[80%] max-w-[90%]  w-full ">
         <div className="text-white absolute top-[30%] md:top-[30%] ">
           <div

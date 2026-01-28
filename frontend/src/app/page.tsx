@@ -1,5 +1,3 @@
-"use client"
-
 import { AppProvider } from "@/context/AppContext"
 import Home from "@/page-components/Home"
 import { MobileProvider } from "@/context/MobileContext"
