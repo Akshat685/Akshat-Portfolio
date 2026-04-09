@@ -1,120 +1,153 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import HeadingTextContainer from "@/atoms/HeadingTextContainer";
-import { splitTextAnimation } from "@/Utills/commonUtills";
-import { useAppContext } from "@/context/AppContext";
-import { color } from "three/tsl";
 import { useMobile } from "@/context/MobileContext";
 
-const expText1 = ["MERN Stack Developer Intern."];
+const FULL_TITLE = "Hi, I'm Akshat Shettigar";
+const NAME_START = "Hi, I'm ".length;
+const PROFESSIONS = [
+  "React & Next.js Developer.",
+  "Full Stack Developer.",
+  "MERN Stack Developer.",
+];
 
 export default function Hero() {
-  const [currentText, setCurrentText] = useState("");
+  const [titleText, setTitleText] = useState("");
+  const [profText, setProfText] = useState("");
+  const [cursorOn, setCursorOn] = useState(true);
   const [isHydrated, setIsHydrated] = useState(false);
-  const isCursorAnimation = useRef(false);
-  const [count, setCount] = useState(0); // Counter for cycling through texts
+  const [longestProf] = useState(() =>
+    PROFESSIONS.reduce((a, b) => (a.length > b.length ? a : b))
+  );
   const { isMobile } = useMobile();
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const profIndex = useRef(0);
+  const blinkRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearAllTimers = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    if (blinkRef.current) {
+      clearInterval(blinkRef.current);
+      blinkRef.current = null;
+    }
+  };
+
+  const addTimer = (fn: () => void, delay: number) => {
+    const id = setTimeout(fn, delay);
+    timers.current.push(id);
+  };
 
   useEffect(() => {
     setIsHydrated(true);
-    if (!isCursorAnimation.current) {
-      initiateCursorAnimation();
-      isCursorAnimation.current = true;
-    }
   }, []);
 
-  const initiateCursorAnimation = () => {
-    addCssClass("title", "cursor-animation");
-    setTimeout(() => {
-      removeCssClass("title", "cursor-animation");
-      beginExperienceAnimation();
-    }, 1800);
-  };
+  useEffect(() => {
+    if (!isHydrated) return;
 
-  const beginExperienceAnimation = () => {
-    animateText(); // Kick off the initial animation
-  };
+    const startBlink = () => {
+      if (blinkRef.current) clearInterval(blinkRef.current);
+      blinkRef.current = setInterval(() => setCursorOn((p) => !p), 500);
+    };
 
-  const animateText = () => {
-    removeCssClass("proffession", "reverse-cursor-animation");
-    addCssClass("proffession", "cursor-animation");
-    setCurrentText(expText1[0]); // Use expText1[0] directly
+    const typeTitle = (i = 0) => {
+      setTitleText(FULL_TITLE.slice(0, i));
+      if (i < FULL_TITLE.length) {
+        addTimer(() => typeTitle(i + 1), 70);
+      }
+    };
 
-    setTimeout(() => {
-      removeCssClass("proffession", "cursor-animation");
-      addCssClass("proffession", "reverse-cursor-animation");
+    const typeProf = (i = 0) => {
+      const prof = PROFESSIONS[profIndex.current];
+      setProfText(prof.slice(0, i));
+      if (i < prof.length) {
+        addTimer(() => typeProf(i + 1), 70);
+      }
+    };
 
-      setTimeout(() => {
-        animateText(); // Call itself to repeat
-      }, 2000);  // Delay after the reverse animation
-    }, 6000); // Duration of the typing/cursor animation
-  };
+    const deleteTitle = (i: number) => {
+      setTitleText(FULL_TITLE.slice(0, i));
+      if (i > 0) {
+        addTimer(() => deleteTitle(i - 1), 100);
+      }
+    };
 
-  const addCssClass = (id: string, className: string) => {
-    const element = document.getElementById(id) as HTMLElement;
-    element.classList.add(className);
-  };
+    const deleteProf = (i: number) => {
+      const prof = PROFESSIONS[profIndex.current];
+      setProfText(prof.slice(0, i));
+      if (i > 0) {
+        addTimer(() => deleteProf(i - 1), 80);
+      } else {
+        profIndex.current = (profIndex.current + 1) % PROFESSIONS.length;
+      }
+    };
 
-  const removeCssClass = (id: string, className: string) => {
-    const element = document.getElementById(id) as HTMLElement;
-    element.classList.remove(className);
-  };
+    const startLoop = () => {
+      typeTitle(0);
+      typeProf(0);
 
-  if (!isHydrated) {
-    return (
-      <div className="flex  h-screen  w-full relative z-10 overflow-hidden bg-black ">
-        {!isMobile && (
-          <video
-            src="/video/bgVideoMain.webm"
-            poster="/images/poster.webp"
-            autoPlay
-            muted
-            playsInline
-            loop
-            className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
-            preload="metadata"
-          />
-        )}
-        {isMobile && (
-          <Image
-            src="/images/poster.webp"
-            alt="Background"
-            fill
-            priority
-            sizes="100vw"
-            className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
-          />
-        )}
-        <div className=" mx-auto md:max-w-[80%] max-w-[90%]  w-full ">
-          <div className="text-white absolute top-[30%] md:top-[30%] ">
-            <div
-              className="flex gap-2 max-w-fit justify-left h-fit max-h-[40px]"
-              id="title"
-            >
-              <h1 className="md:text-4xl w-fit text-2xl">Hi, I'm <b className="text-orange-500">Akshat Shettigar</b></h1>
-            </div>
-            <div className="max-w-fit md:mt-4 mt-2 md:text-6xl text-3xl min-h-[60px] md:min-h-[80px]">
-              <h1 id="proffession" className="font-extrabold ">
-                {""}
-              </h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      const typingDuration =
+        Math.max(FULL_TITLE.length, PROFESSIONS[profIndex.current].length) * 70;
+
+      addTimer(() => {
+        deleteTitle(FULL_TITLE.length);
+        deleteProf(PROFESSIONS[profIndex.current].length);
+
+        const deletingDuration =
+          Math.max(FULL_TITLE.length, PROFESSIONS[profIndex.current].length) * 100;
+
+        addTimer(startLoop, deletingDuration + 600);
+      }, typingDuration + 2500);
+    };
+
+    // ✅ Reset everything cleanly and restart from scratch
+    const resetAndStart = () => {
+      clearAllTimers();
+      setTitleText("");
+      setProfText("");
+      setCursorOn(true);
+      startBlink();
+      startLoop();
+    };
+
+    // ✅ Page Visibility API — restart animation when tab becomes active again
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        resetAndStart();
+      } else {
+        // Tab hidden — clear everything to prevent timer pileup
+        clearAllTimers();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    resetAndStart();
+
+    return () => {
+      clearAllTimers();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isHydrated]);
+
+  const plainPart = titleText.slice(0, Math.min(titleText.length, NAME_START));
+  const namePart = titleText.length > NAME_START ? titleText.slice(NAME_START) : "";
+
+  const [firstWord, ...rest] = profText.split(" ");
+  const restWords = rest.join(" ");
+
+  const [longestFirst, ...longestRest] = longestProf.split(" ");
+  const longestRestWords = longestRest.join(" ");
+
+  const cursor = <span style={{ opacity: cursorOn ? 1 : 0 }}>|</span>;
 
   return (
-    <div className="flex  h-screen  w-full relative z-10 overflow-hidden bg-black ">
+    <div className="flex h-screen w-full relative z-10 overflow-hidden bg-black">
       {!isMobile && (
         <video
           src="/video/bgVideoMain.webm"
           poster="/images/poster.webp"
-          autoPlay
-          muted
-          playsInline
-          loop
+          autoPlay muted playsInline loop
           className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
           preload="metadata"
         />
@@ -123,35 +156,43 @@ export default function Hero() {
         <Image
           src="/images/poster.webp"
           alt="Background"
-          fill
-          priority
-          sizes="100vw"
+          fill priority sizes="100vw"
           className="absolute top-[30%] left-0 w-full h-full object-cover z-[-1px]"
         />
       )}
-      <div className=" mx-auto md:max-w-[80%] max-w-[90%]  w-full ">
-        <div className="text-white absolute top-[30%] md:top-[30%] ">
-          <div
-            className="flex gap-2 max-w-fit justify-left h-fit max-h-[40px]"
-            id="title"
-          >
-            <h1 className="md:text-4xl w-fit text-2xl">Hi, I'm <b className="text-orange-500">Akshat Shettigar</b></h1>
-          </div>
-          <div className="max-w-fit md:mt-4 mt-2 md:text-6xl text-3xl min-h-[60px] md:min-h-[80px]">
-            <h1 id="proffession" className="font-extrabold ">
-              {currentText?.split(" ")[0]}{" "}
-              <span className="text-orange-500">
-                {currentText?.split(" ").slice(1).join(" ")}
+
+      <div className="mx-auto md:max-w-[80%] max-w-[90%] w-full">
+        <div className="text-white absolute top-[30%] md:top-[30%]">
+
+          {/* Title line */}
+          <h1 className="md:text-4xl text-2xl w-fit">
+            {plainPart}
+            <b className="text-orange-500">{namePart}</b>
+            {cursor}
+          </h1>
+
+          {/* Profession line */}
+          <div className="md:mt-4 mt-2 md:text-6xl text-3xl min-h-[60px] md:min-h-[80px]">
+            <h1 className="font-extrabold relative w-fit">
+              <span className="invisible whitespace-nowrap">
+                {longestFirst}{" "}
+                <span>{longestRestWords}</span>
+              </span>
+              <span className="absolute left-0 top-0 whitespace-nowrap">
+                {firstWord}{restWords && " "}
+                <span className="text-orange-500">{restWords}</span>
+                {cursor}
               </span>
             </h1>
           </div>
-          <p className="text-white text-sm md:text-base md:mt-4 md:max-w-[600px] max-w-[250px] md:font-semibold ">
-          Passionate MERN Stack Developer with hands-on experience in building
-            dynamic web applications. Successfully completed a 4-month
-            internship at WebCreta Technologies Pvt Ltd, where I honed my skills
-            in MongoDB, Express.js, React.js, and Node.js. Always eager to learn
-            and contribute to innovative projects in the web development space.
+
+          <p className="w-full max-w-[600px] text-justify text-white text-sm md:text-base md:mt-4 md:font-semibold">
+            Full-Stack Developer skilled in React.js, Next.js, Node.js, TypeScript, and GraphQL,
+            building high-performance, scalable web applications. Gained hands-on experience through
+            internships at Codage Habitation and Webcreta Technologies, delivering real-world projects
+            using the MERN stack and modern tools like Prisma ORM and PostgreSQL.
           </p>
+
         </div>
       </div>
     </div>
